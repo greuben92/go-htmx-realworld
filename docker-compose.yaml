@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: realworld
+    volumes:
+      - ./.data/docker-postgres:/var/lib/postgresql/data
+    networks:
+      - realworld
+
+  server:
+    build: .
+    networks:
+      - realworld
+    depends_on:
+      - db
+    environment:
+      LOG_FORMAT: json
+      DB_HOST: db
+      ADDR: "0.0.0.0:6969"
+    ports:
+      - 6969:6969
+
+networks:
+  realworld:
